@@ -48,7 +48,18 @@ FROM productdata
 GROUP BY Bullet_Points, Product_Length, Product_ID
 HAVING COUNT(*) > 1;
 SELECT COUNT (*) FROM productdata
-
+---deleting extra characters
+UPDATE productdata
+SET Bullet_Points = REPLACE(Bullet_Points, '[', '')
+---------------------
+UPDATE productdata
+SET Description = REPLACE(Description, '</b>', '')
+---
+UPDATE productdata
+SET Description = REPLACE(Description, '<b>', '')
+--
+UPDATE productdata
+SET Description = REPLACE(Description, '</p>', '')
 
 
 SELECT DISTINCT Product_ID, 
@@ -70,8 +81,9 @@ FROM productdata
 ------------adding new column 
 ALTER TABLE productdata ADD short_title NVARCHAR(50);
 
----------------
-
+-----------Populating the new column
+UPDATE productdata 
+SET short_title = Bullet_Points + Title
 
 ---trimming bullet points column---
 UPDATE productdata
@@ -88,3 +100,4 @@ SET Description = TRIM(SUBSTRING(
     REPLACE(REPLACE(REPLACE(Description, 'Set of', '['), 'Includes', ''), 'Features', ''), 1, 25))
 
 	------END-----------
+
